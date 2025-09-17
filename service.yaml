@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mynode
+  labels:
+    app: mynode
+spec:
+  selector:
+    app: mynode
+  ports:
+    - name: http
+      port: 80          # stable service port
+      targetPort: 3000  # forwards to containerPort in the Pod
+  type: NodePort        # easiest local access without Ingress/LB

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mynode
+  labels:
+    app: mynode
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mynode
+  template:
+    metadata:
+      labels:
+        app: mynode
+    spec:
+      # Uncomment the next two lines only if your registry is PRIVATE
+      # imagePullSecrets:
+      #   - name: dockerhub-creds
+      containers:
+        - name: mynode
+          image: manoj322/hello-world:latest  # e.g. manojsk/mynode:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
