@@ -7,5 +7,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`My frist dockerszz`)
+  console.log(`My frist dockers`)
 })
