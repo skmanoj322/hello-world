@@ -25,5 +25,21 @@ jobs:
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
+      
+      - name: Deploy
+        run: |
+          ssh -o StrictHostKeyChecking=yes -T "$SSH_USER@$SSH_HOST" <<'EOF'
+            set -euo pipefail
+            cd "$APP_DIR"
+            git fetch origin "$BRANCH"
+            git reset --hard "origin/$BRANCH"
+            npm install
+            pm2 reload hello-world || pm2 start "node index.js" --name hello-world
+          EOF
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          APP_DIR:  ${{ secrets.APP_DIR }}
+          BRANCH:   ${{ secrets.BRANCH }}
 
     
