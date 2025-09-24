@@ -15,4 +15,17 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
         env:
           SSH_HOST: ${{secrets.SSH_KEY}}
+      - name : SSH into Azure
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          APP_DIR:  ${{ secrets.APP_DIR }}
+          BRANCH:   ${{ secrets.BRANCH }}
+        run: |
+           ssh -o StrictHostKeyChecking=yes "$SSH_USER@$SSH_HOST" << 'EOF'
+           cd "$APP_DIR"
+           git fetch origin "$BRANCH"
+           git reset --hard "origin/$BRANCH"
+           EOF
+
     
