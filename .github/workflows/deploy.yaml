@@ -16,6 +16,9 @@ jobs:
         env:
           SSH_HOST: ${{secrets.SSH_KEY}}
       - name : Add host key (pinned)
+        env:
+          VM_SSH_ED25519_PUBKEY : ${{secrets.VM_SSH_ED25519_PUBKEY}}
+
         run: |
             printf "%s %s\n" "$SSH_HOST" "$VM_SSH_ED25519_PUBKEY" >> ~/.ssh/known_hosts
             chmod 644 ~/.ssh/known_hosts
