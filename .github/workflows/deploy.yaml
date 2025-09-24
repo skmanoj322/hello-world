@@ -16,29 +16,4 @@ jobs:
           ssh-keyscan -H "$SSH_HOST" >> ~/.ssh
         env:
           SSH_KEY: ${{secrets.SSH_KEY}}
-      - name : Pull , build and restart
-
-        env:
-          SSH_HOST: ${{ secrets.SSH_HOST }}
-          SSH_USER: ${{ secrets.SSH_USER }}
-          APP_DIR:  ${{ secrets.APP_DIR }}
-          BRANCH:   ${{ secrets.BRANCH }}
-        
-        run: | 
-          ssh -o StrictHostKeyChecking=yes "$SSH_USER@$SSH_HOST" << 'EOF'
-            set -euo pipefail
-            cd "$APP_DIR"
-            git fetch origin "$BRANCH"
-            git reset --hard "origin/$BRANCH"
-            npm ci --omit=dev
-            npm run build
-            # restart zero-downtime if using PM2
-            if pm2 list | grep -q myapp; then
-              pm2 reload myapp
-            else
-              pm2 start ecosystem.config.js || pm2 start "node dist/server.js" --name myapp
-              pm2 save
-            fi
-          EOF
-
-
+    
