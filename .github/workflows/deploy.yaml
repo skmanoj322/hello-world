@@ -8,32 +8,22 @@ jobs:
   deploy:
     runs-on:  ubuntu-latest
     steps:
-      - name: Prepare SSH
+      - name: Start ssh-agent and add key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add host key (known_hosts)
         run: |
           mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -t ed25519 -H "$SSH_HOST" >> ~/.ssh/known_hosts
         env:
-          SSH_HOST: ${{secrets.SSH_KEY}}
-      - name : Add host key (pinned)
-        env:
-          VM_SSH_ED25519_PUBKEY : ${{secrets.VM_SSH_ED25519_PUBKEY}}
           SSH_HOST: ${{ secrets.SSH_HOST }}
 
-        run: |
-            printf "%s %s\n" "$SSH_HOST" "$VM_SSH_ED25519_PUBKEY" >> ~/.ssh/known_hosts
-            chmod 644 ~/.ssh/known_hosts
-      - name : SSH into Azure
+      - name: Test SSH
+        run: ssh -o StrictHostKeyChecking=yes -T "$SSH_USER@$SSH_HOST" 'whoami && hostname'
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
-          APP_DIR:  ${{ secrets.APP_DIR }}
-          BRANCH:   ${{ secrets.BRANCH }}
-        run: |
-           ssh -o StrictHostKeyChecking=yes "$SSH_USER@$SSH_HOST" << 'EOF'
-           cd "$APP_DIR"
-           git fetch origin "$BRANCH"
-           git reset --hard "origin/$BRANCH"
-           EOF
 
     
