@@ -35,7 +35,6 @@ jobs:
             BRANCH="${BRANCH}"
             git fetch origin "$BRANCH"
             git reset --hard "origin/$BRANCH"
-            npm install
             pm2 reload hello-world || pm2 start "node index.js" --name hello-world
           EOF
         env:
