@@ -30,6 +30,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=yes -T "$SSH_USER@$SSH_HOST" <<'EOF'
             set -euo pipefail
+            APP_DIR="${APP_DIR}"
             cd "$APP_DIR"
             git fetch origin "$BRANCH"
             git reset --hard "origin/$BRANCH"
