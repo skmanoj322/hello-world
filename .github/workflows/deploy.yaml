@@ -28,11 +28,11 @@ jobs:
       
       - name: Deploy
         run: |
-          ssh -o StrictHostKeyChecking=yes -T "$SSH_USER@$SSH_HOST" <<'EOF'
+          ssh -o StrictHostKeyChecking=yes -T "$SSH_USER@$SSH_HOST" <<EOF
             set -euo pipefail
+            cd "$APP_DIR"
             APP_DIR="${APP_DIR}"
             BRANCH="${BRANCH}"
-            cd "$APP_DIR"
             git fetch origin "$BRANCH"
             git reset --hard "origin/$BRANCH"
             npm install
