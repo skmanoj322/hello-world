@@ -22,7 +22,7 @@ jobs:
           APP_DIR:  ${{ secrets.APP_DIR }}
           BRANCH:   ${{ secrets.BRANCH }}
         run: |
-           ssh -o StrictHostKeyChecking=yes "$SSH_USER@$SSH_HOST" << 'EOF'
+           ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" << 'EOF'
            cd "$APP_DIR"
            git fetch origin "$BRANCH"
            git reset --hard "origin/$BRANCH"
