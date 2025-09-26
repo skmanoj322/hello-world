@@ -43,4 +43,5 @@ jobs:
               sudo docker pull manoj322/hello-world:latest
               sudo docker stop hello-world || true
               sudo docker rm hello-world || true
-              sudo docker run -d --name hello-world -p 80:5000 manoj322/hello-world:latest
+              sudo docker run -d --name hello-world --restart unless-stopped \ -p 127.0.0.1:5000:5000 \ manoj322/hello-world:latest
+
