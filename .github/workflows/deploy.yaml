@@ -40,3 +40,14 @@ jobs:
           subject-name: index.docker.io/my-docker-hub-namespace/my-docker-hub-repository
           subject-digest: ${{steps.push.outputs.digest}}
           push_to_registry : true
+      - name: Deploy to VM
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.SSH_USER}}
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          script: |
+              sudo docker pull manoj322/hello-world:latest
+              sudo docker stop hello-world || true
+              sudo docker rm hello-world || true
+              sudo docker run -d --name hello-world -p 80:5000 manoj322/hello-world:latest
